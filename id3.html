@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Estoque</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px;
+            background-color: #f2f4f7;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        .subtitulo {
+            margin-top: 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        form input {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            grid-column: span 3;
+            padding: 12px;
+            border: none;
+            background-color: #2d89ef;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #1b5fbf;
+        }
+
+        h2 {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .baixo {
+            color: red;
+            font-weight: bold;
+        }
+
+        .btn-excluir {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Controle de Estoque</h1>
+    <p class="subtitulo">Sistema simples para controle de produtos</p>
+
+    <form id="formEstoque">
+        <input type="text" id="produto" placeholder="Nome do produto" required>
+        <input type="number" id="quantidade" placeholder="Quantidade" required>
+        <input type="number" id="minimo" placeholder="Estoque mínimo" required>
+
+        <button type="submit">Adicionar Produto</button>
+    </form>
+
+    <h2>Produtos em Estoque</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Mínimo</th>
+                <th>Status</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="tabelaEstoque"></tbody>
+    </table>
+
+    <footer>
+        Desenvolvido por Gabriel • Sistema de Estoque Simples
+    </footer>
+</div>
+
+<script>
+    const form = document.getElementById("formEstoque");
+    const tabela = document.getElementById("tabelaEstoque");
+
+    form.addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const produto = document.getElementById("produto").value;
+        const quantidade = parseInt(document.getElementById("quantidade").value);
+        const minimo = parseInt(document.getElementById("minimo").value);
+
+        if (produto === "" || isNaN(quantidade) || isNaN(minimo)) {
+            alert("Preencha corretamente os campos.");
+            return;
+        }
+
+        let status = "OK";
+        let classe = "";
+
+        if (quantidade <= minimo) {
+            status = "Baixo";
+            classe = "baixo";
+        }
+
+        const linha = document.createElement("tr");
+
+        linha.innerHTML = `
+            <td>${produto}</td>
+            <td>${quantidade}</td>
+            <td>${minimo}</td>
+            <td class="${classe}">${status}</td>
+            <td>
+                <button class="btn-excluir" onclick="this.parentElement.parentElement.remove()">
+                    Excluir
+                </button>
+            </td>
+        `;
+
+        tabela.appendChild(linha);
+        form.reset();
+    });
+</script>
+
+</body>
+</html>
